@@ -1,6 +1,8 @@
-// Main JavaScript File
+// Main JS file
 
 import * as THREE from "three";
+import { createCube } from "./models/cube";
+import { createSphere } from "./models/line";
 
 // Set the scene
 const scene = new THREE.Scene();
@@ -17,21 +19,21 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Build the cube
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-// Add cube to scene
+const cube = createCube();
+cube.position.x = -2;
 scene.add(cube);
 
-// Set camera position
-camera.position.z = 4;
+const sphere = createSphere();
+sphere.position.x = 2;
+scene.add(sphere);
 
-// Rendering the scene
-function animate() {
+camera.position.z = 5;
+
+const animate = () => {
   requestAnimationFrame(animate);
-  cube.rotation.x += 0.03;
+  cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
   renderer.render(scene, camera);
-}
+};
+
 animate();
