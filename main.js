@@ -24,6 +24,9 @@ const cube = createCube();
 cube.position.x = -2;
 scene.add(cube);
 
+const secondCube = createCube(0x44aaaa);
+scene.add(secondCube);
+
 const cubeColor = 0xfffff;
 const cubeIntensity = 3;
 const cubeLighting = new THREE.DirectionalLight(cubeColor, cubeIntensity);
@@ -44,6 +47,8 @@ const animate = () => {
   requestAnimationFrame(animate);
   cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
+  secondCube.rotation.x += 0.03;
+  secondCube.rotation.y += 0.03;
   renderer.render(scene, camera);
 };
 
