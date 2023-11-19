@@ -19,13 +19,24 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// Cube
 const cube = createCube();
 cube.position.x = -2;
 scene.add(cube);
 
+const cubeColor = 0xfffff;
+const cubeIntensity = 3;
+const cubeLighting = new THREE.DirectionalLight(cubeColor, cubeIntensity);
+cubeLighting.position.set(-1, 2, 4);
+scene.add(cubeLighting);
+
 const sphere = createSphere();
 sphere.position.x = 2;
 scene.add(sphere);
+
+// Add lighting
+const ambientLight = new THREE.AmbientLight(0x404040);
+scene.add(ambientLight);
 
 camera.position.z = 5;
 
