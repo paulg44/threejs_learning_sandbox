@@ -1,8 +1,13 @@
 // Main JS file
 
 import * as THREE from "three";
+import { OrbitControls } from "three/addons.controls/OrbitControls.js";
 import { createCube } from "./models/cube";
 import { createSphere } from "./models/line";
+
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(0, 5, 0);
+controls.update();
 
 // Set the scene
 const scene = new THREE.Scene();
@@ -10,7 +15,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
-  0.1,
+  0.2,
   1000
 );
 
@@ -21,10 +26,10 @@ document.body.appendChild(renderer.domElement);
 
 // Cube
 const cube = createCube();
-cube.position.x = -2;
+cube.position.x = -4;
 scene.add(cube);
 
-const secondCube = createCube(0x44aaaa);
+const secondCube = createCube(0x44aaaa, 5);
 scene.add(secondCube);
 
 const cubeColor = 0xfffff;
@@ -45,7 +50,7 @@ camera.position.z = 5;
 
 const animate = () => {
   requestAnimationFrame(animate);
-  cube.rotation.x += 0.01;
+  cube.rotation.x += 0.02;
   cube.rotation.y += 0.01;
   secondCube.rotation.x += 0.03;
   secondCube.rotation.y += 0.03;
