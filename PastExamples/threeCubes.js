@@ -1,5 +1,6 @@
+// Fundamentals from three.js
+
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 function main() {
   // Set up canvas
@@ -56,10 +57,6 @@ function main() {
   //   Cube spin timings
   function render(time) {
     time *= 0.001;
-
-    const canvas = renderer.domElement;
-    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    camera.updateProjectionMatrix();
 
     cubes.forEach((cube, ndx) => {
       const speed = 1 + ndx * 0.1;
