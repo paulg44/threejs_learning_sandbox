@@ -1,11 +1,13 @@
 // Scenegraph from three.js manual
 
 import * as THREE from "three";
+import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 
 function main() {
   // Set up canvas
   const canvas = document.querySelector("#c");
   const renderer = new THREE.WebGL1Renderer({ antialias: true, canvas });
+  const gui = new GUI();
 
   //   Camera options
   const fov = 40;
@@ -81,6 +83,53 @@ function main() {
   moonMesh.scale.set(0.5, 0.5, 0.5);
   moonOrbit.add(moonMesh);
   objects.push(moonMesh);
+
+  //   Axis helper, draws three lines representing the local X, Y and Z axis for visualization
+  //   objects.forEach((node) => {
+  //     const axes = new THREE.AxesHelper();
+  //     axes.material.depthTest = false;
+  //     axes.renderOrder = 1;
+  //     node.add(axes);
+  //   });
+
+  //   Using lil-gui to make a UI to manipulate the properties. Not 100% sure how this all works, but looks like a really handy thing to be able to have on screen
+  class AxisGridHelper {
+    constructor(node, units = 10) {
+      const axes = new THREE.AxesHelper();
+      axes.material.depthTest = false;
+      axes.renderOrder = 2;
+      node.add(axes);
+
+      const grid = new THREE.GridHelper(units, units);
+      grid.material.depthTest = false;
+      grid.renderOrder = 1;
+      node.add(grid);
+
+      this.grid = grid;
+      this.axes = axes;
+      this.visible = false;
+    }
+    get visible() {
+      return this._visible;
+    }
+    set visible(v) {
+      this._visible = v;
+      this.grid.visible = v;
+      this.axes.visible = v;
+    }
+  }
+
+  function makeAxisGrid(node, label, units) {
+    const helper = new AxisGridHelper(node, units);
+    gui.add(helper, "visible").name(label);
+  }
+
+  makeAxisGrid(solarSystem, "solarSystem", 25);
+  makeAxisGrid(sunMesh, "sunMesh");
+  makeAxisGrid(earthOrbit, "earthOrbit");
+  makeAxisGrid(earthMesh, "earthMesh");
+  makeAxisGrid(moonOrbit, "moonOrbit");
+  makeAxisGrid(moonMesh, "moonMesh");
 
   function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
