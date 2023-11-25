@@ -68,8 +68,6 @@ function main() {
 
     requestAnimationFrame(render);
   }
-
-  //   Render cubes
   requestAnimationFrame(render);
 }
 
