@@ -1,6 +1,7 @@
 // Textures from three.js
 
 import * as THREE from "three";
+import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 
 function main() {
   // Set up canvas
@@ -29,38 +30,70 @@ function main() {
   const cubes = [];
 
   const loader = new THREE.TextureLoader();
-  loader.load(
-    "https://threejs.org/manual/examples/resources/images/wall.jpg",
-    (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-
-      const material = new THREE.MeshBasicMaterial({ map: texture });
-      const cube = new THREE.Mesh(geometry, material);
-      scene.add(cube);
-      cubes.push(cube);
-    }
+  const texture = loader.load(
+    "https://threejs.org/manual/examples/resources/images/wall.jpg"
   );
+  texture.colorSpace = THREE.SRGBColorSpace;
 
-  //   const materials = [
-  //     new THREE.MeshBasicMaterial({
-  //       map: loadColorTexture("resources/images/flower-1.jpg"),
-  //     }),
-  //     new THREE.MeshBasicMaterial({
-  //       map: loadColorTexture("resources/images/flower-2.jpg"),
-  //     }),
-  //     new THREE.MeshBasicMaterial({
-  //       map: loadColorTexture("resources/images/flower-3.jpg"),
-  //     }),
-  //     new THREE.MeshBasicMaterial({
-  //       map: loadColorTexture("resources/images/flower-4.jpg"),
-  //     }),
-  //     new THREE.MeshBasicMaterial({
-  //       map: loadColorTexture("resources/images/flower-5.jpg"),
-  //     }),
-  //     new THREE.MeshBasicMaterial({
-  //       map: loadColorTexture("resources/images/flower-6.jpg"),
-  //     }),
-  //   ];
+  const material = new THREE.MeshBasicMaterial({ map: texture });
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+  cubes.push(cube);
+
+  class DegRadHelper {
+    constructor(obj, prop) {
+      this.obj = obj;
+      this.prop = prop;
+    }
+    get value() {
+      return THREE.MathUtils.radToDeg(this.obj[this.prop]);
+    }
+    set value(v) {
+      this.obj[this.prop] = THREE.MathUtils.degToRad(v);
+    }
+  }
+
+  class StringToNumberHelper {
+    constructor(obj, prop) {
+      this.obj = obj;
+      this.prop = prop;
+    }
+    get value() {
+      return this.obj[this.prop];
+    }
+    set value(v) {
+      this.obj[this.prop] = parseFloat(v);
+    }
+  }
+
+  const wrapModes = {
+    ClampToEdgeWrapping: THREE.ClampToEdgeWrapping,
+    RepeatWrapping: THREE.RepeatWrapping,
+    MirroredRepeatWrapping: THREE.MirroredRepeatWrapping,
+  };
+
+  function updateTexture() {
+    texture.needsUpdate = true;
+  }
+
+  const gui = new GUI();
+  gui
+    .add(new StringToNumberHelper(texture, "wrapS"), "value", wrapModes)
+    .name("texture.wrapS")
+    .onChange(updateTexture);
+  gui
+    .add(new StringToNumberHelper(texture, "wrapT"), "value", wrapModes)
+    .name("texture.wrapT")
+    .onChange(updateTexture);
+  gui.add(texture.repeat, "x", 0, 5, 0.01).name("texture.repeat.x");
+  gui.add(texture.repeat, "y", 0, 5, 0.01).name("texture.repeat.y");
+  gui.add(texture.offset, "x", -2, 2, 0.01).name("texture.offset.x");
+  gui.add(texture.offset, "y", -2, 2, 0.01).name("texture.offset.y");
+  gui.add(texture.center, "x", -0.5, 1.5, 0.01).name("texture.center.x");
+  gui.add(texture.center, "y", -0.5, 1.5, 0.01).name("texture.center.y");
+  gui
+    .add(new DegRadHelper(texture, "rotation"), "value", -360, 360)
+    .name("texture.rotation");
 
   function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
@@ -72,12 +105,6 @@ function main() {
     }
 
     return needResize;
-  }
-
-  function loadColorTexture(path) {
-    const texture = loader.load(path);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    return texture;
   }
 
   //   Cube spin timings
