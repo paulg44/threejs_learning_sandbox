@@ -18,4 +18,4 @@ Currently completing the three.js manual documentation before I experiment on my
 
 - Primitives ✅
 - Scenegraph ✅
-- Materials
+- Materials ✅
